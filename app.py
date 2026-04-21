@@ -10,7 +10,7 @@ st.title("🏀 Season Stats Dashboard")
 # 1. Connect to your Google Sheet
 # You'll put your Sheet URL in your Render Environment Variables later
 conn = st.connection("gsheets", type=GSheetsConnection)
-url = "https://docs.google.com/spreadsheets/d/1IAG7ZAjkCKt6WmjcoAK3LgZMCTzJdL9ychNnN2pvcX8/edit?usp=sharing"
+url = "GSHEETS_SPREADSHEET_URL"
 df = conn.read(spreadsheet=url)
 
 # 2. Sidebar Filters
