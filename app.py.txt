@@ -1,0 +1,43 @@
+import streamlit as st
+from streamlit_gsheets import GSheetsConnection
+import pandas as pd
+
+# Page setup
+st.set_page_config(page_title="Basketball Stats Tracker", layout="wide")
+
+st.title("🏀 Season Stats Dashboard")
+
+# 1. Connect to your Google Sheet
+# You'll put your Sheet URL in your Render Environment Variables later
+conn = st.connection("gsheets", type=GSheetsConnection)
+url = "https://docs.google.com/spreadsheets/d/1IAG7ZAjkCKt6WmjcoAK3LgZMCTzJdL9ychNnN2pvcX8/edit?usp=sharing"
+df = conn.read(spreadsheet=url)
+
+# 2. Sidebar Filters
+st.sidebar.header("Filter Stats")
+selected_team = st.sidebar.selectbox("Select Team", options=df['Team'].unique())
+
+# Filter data based on selection
+filtered_df = df[df['Team'] == selected_team]
+
+# 3. Top Performers (Metric Cards)
+st.subheader(f"Top Performers: {selected_team}")
+col1, col2, col3 = st.columns(3)
+
+if not filtered_df.empty:
+    top_scorer = filtered_df.loc[filtered_df['PTS'].idxmax()]
+    top_rebounder = filtered_df.loc[filtered_df['REB_TOT'].idxmax()]
+    top_playmaker = filtered_df.loc[filtered_df['AST'].idxmax()]
+
+    col1.metric("Points Leader", top_scorer['Name'], f"{top_scorer['PTS']} PTS")
+    col2.metric("Rebound Leader", top_rebounder['Name'], f"{top_rebounder['REB_TOT']} REB")
+    col3.metric("Assist Leader", top_playmaker['Name'], f"{top_playmaker['AST']} AST")
+
+# 4. Interactive Leaderboard
+st.divider()
+st.subheader("Full Player Statistics")
+# This allows players to sort by clicking column headers
+st.dataframe(filtered_df.sort_values(by="PTS", ascending=False), use_container_width=True)
+
+# 5. Visual Chart
+st.bar_chart(data=filtered_df, x="Name", y="PTS")
