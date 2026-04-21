@@ -1,3 +1,6 @@
-streamlit
 pandas
-st-gsheets-connection
+dash
+dash-bootstrap-components
+gspread
+google-auth
+plotly
