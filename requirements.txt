@@ -2,5 +2,5 @@ pandas
 dash
 dash-bootstrap-components
 gspread
-google-auth
 plotly
+gunicorn
